@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Property Details</title>
+    <link rel="stylesheet" type="text/css" href="/buyer/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Property Details</h1>
+        <div>
+            <h2 th:text="${property.place}">Property Place</h2>
+            <p>Area: <span th:text="${property.area}">Area</span> sq ft</p>
+            <p>Bedrooms: <span th:text="${property.numberOfBedrooms}">Bedrooms</span></p>
+            <p>Bathrooms: <span th:text="${property.numberOfBathrooms}">Bathrooms</span></p>
+            <p>Nearby Hospitals: <span th:text="${property.nearbyHospitals}">Nearby Hospitals</span></p>
+            <p>Nearby Colleges: <span th:text="${property.nearbyColleges}">Nearby Colleges</span></p>
+            <form th:action="@{/buyer/property/{id}/interested(id=${property.id})}" method="post" th:if="${!showSellerDetails}">
+                <button type="submit">I'm Interested</button>
+            </form>
+            <div id="sellerDetails" th:if="${showSellerDetails}">
+                <h3>Seller Details</h3>
+                <p>Seller Name: <span th:text="${property.seller.firstName + ' ' + property.seller.lastName}">Seller Name</span></p>
+                <p>Seller Email: <span th:text="${property.seller.email}">Seller Email</span></p>
+                <p>Seller Phone: <span th:text="${property.seller.phoneNumber}">Seller Phone</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Properties</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <style>
+        .add-property-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Properties</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Place</th>
+                <th>Area (sq ft)</th>
+                <th>Bedrooms</th>
+                <th>Bathrooms</th>
+                <th>Nearby Hospitals</th>
+                <th>Nearby Colleges</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="property : ${properties}">
+                <td th:text="${property.place}">Place</td>
+                <td th:text="${property.area}">Area</td>
+                <td th:text="${property.numberOfBedrooms}">Bedrooms</td>
+                <td th:text="${property.numberOfBathrooms}">Bathrooms</td>
+                <td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
+                <td th:text="${property.nearbyColleges}">Nearby Colleges</td>
+                <td>
+                    <a th:href="@{/properties/edit/{id}(id=${property.id})}">Edit</a> |
+                    <a th:href="@{/properties/delete/{id}(id=${property.id})}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="add-property-container">
+        <a href="/properties/add" class="add-button">Add Property</a>
+    </div>
+</body>
+</html>

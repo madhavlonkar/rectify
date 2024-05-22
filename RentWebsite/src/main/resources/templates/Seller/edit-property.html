@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Edit Property</title>
+<link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+	<h1>Edit Property</h1>
+	<form action="#" th:action="@{/properties/update}"
+		th:object="${property}" method="post">
+		<input type="hidden" th:field="*{id}" />
+		<div>
+			<label for="place">Place:</label> <input type="text" id="place"
+				th:field="*{place}" required />         
+		</div>
+		<div>
+			<label for="area">Area (sq ft):</label> <input type="number"
+				id="area" th:field="*{area}" required />
+		</div>
+		<div>
+			<label for="numberOfBedrooms">Number of Bedrooms:</label> <input
+				type="number" id="numberOfBedrooms" th:field="*{numberOfBedrooms}"
+				required />
+		</div>
+		<div>
+			<label for="numberOfBathrooms">Number of Bathrooms:</label> <input
+				type="number" id="numberOfBathrooms" th:field="*{numberOfBathrooms}"
+				required />
+		</div>
+		<div>
+			<label for="nearbyHospitals">Nearby Hospitals:</label> <input
+				type="text" id="nearbyHospitals" th:field="*{nearbyHospitals}"
+				required />
+		</div>
+		<div>
+			<label for="nearbyColleges">Nearby Colleges:</label> <input
+				type="text" id="nearbyColleges" th:field="*{nearbyColleges}"
+				required />
+		</div>
+		<button type="submit">Update Property</button>
+	</form>
+</body>
+</html>

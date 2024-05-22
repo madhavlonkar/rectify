@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="/register/style.css">
+    <script src="/register/validation.js" defer></script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Register</h1>
+        <form action="#" th:action="@{/users/register}" th:object="${user}" method="post" id="registerForm">
+            <div class="form-row">
+                <div>
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" th:field="*{firstName}" required/>
+                </div>
+                <div>
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" th:field="*{lastName}" required/>
+                </div>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" th:field="*{email}" required/>
+            </div>
+            <br>
+            <div>
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" required/>
+            </div><br>
+            <div>
+                <label for="userType">User Type:</label>
+                <select id="userType" th:field="*{userType}">
+                    <option value="Seller">Seller</option>
+                    <option value="Buyer">Buyer</option>
+                </select>
+            </div><br>
+            <div class="form-row">
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" th:field="*{password}" required/>
+                </div>
+                <div>
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required/>
+                </div>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p th:text="${message}"></p>
+        <a href="/login" class="login-button">Login</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Properties</title>
+    <link rel="stylesheet" type="text/css" href="/buyer/style.css">
+    <script src="/buyer/validation.js" defer></script>
+</head>
+<body>
+    <h1>All Properties</h1>
+    <form action="#" th:action="@{/buyer/filter}" method="post" id="filterForm">
+        <div>
+            <label for="place">Place:</label>
+            <input type="text" id="place" name="place"/>
+        </div>
+        <div>
+            <label for="minArea">Min Area:</label>
+            <input type="number" id="minArea" name="minArea"/>
+        </div>
+        <div>
+            <label for="maxArea">Max Area:</label>
+            <input type="number" id="maxArea" name="maxArea"/>
+        </div>
+        <div>
+            <label for="minBedrooms">Min Bedrooms:</label>
+            <input type="number" id="minBedrooms" name="minBedrooms"/>
+        </div>
+        <div>
+            <label for="maxBedrooms">Max Bedrooms:</label>
+            <input type="number" id="maxBedrooms" name="maxBedrooms"/>
+        </div>
+        <button type="submit">Apply Filters</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Place</th>
+                <th>Area (sq ft)</th>
+                <th>Bedrooms</th>
+                <th>Bathrooms</th>
+                <th>Nearby Hospitals</th>
+                <th>Nearby Colleges</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="property : ${properties}">
+                <td th:text="${property.place}">Place</td>
+                <td th:text="${property.area}">Area</td>
+                <td th:text="${property.numberOfBedrooms}">Bedrooms</td>
+                <td th:text="${property.numberOfBathrooms}">Bathrooms</td>
+                <td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
+                <td th:text="${property.nearbyColleges}">Nearby Colleges</td>
+                <td>
+                    <a th:href="@{/buyer/property/{id}(id=${property.id})}"><button type="button">View Details</button></a>
+                    <form th:action="@{/buyer/property/{id}/interested(id=${property.id})}" method="post" style="display:inline;">
+                        <button type="submit">I'm Interested</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
