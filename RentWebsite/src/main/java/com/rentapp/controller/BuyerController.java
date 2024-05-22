@@ -1,17 +1,25 @@
 package com.rentapp.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.rentapp.model.Property;
 import com.rentapp.model.User;
 import com.rentapp.service.PropertyService;
 import com.rentapp.utility.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/buyer")
@@ -81,4 +89,40 @@ public class BuyerController {
         model.addAttribute("showSellerDetails", true); // Show seller details
         return "Buyer/property-details";
     }
+    
+    @PostMapping("/property/{id}/like")
+    @ResponseBody
+    public Map<String, Object> likeProperty(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Property property = propertyService.getPropertyById(id);
+        if (property != null) {
+            property.setLikes(property.getLikes() + 1);
+            property.setLiked(true); // Assuming you have a way to check if a user has liked a property
+            propertyService.updateProperty(property);
+            response.put("likes", property.getLikes());
+        } else {
+            response.put("error", "Property not found");
+        }
+        return response;
+    }
+
+    @PostMapping("/property/{id}/unlike")
+    @ResponseBody
+    public Map<String, Object> unlikeProperty(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        Property property = propertyService.getPropertyById(id);
+        if (property != null) {
+            property.setLikes(property.getLikes() - 1);
+            property.setLiked(false); // Assuming you have a way to check if a user has liked a property
+            propertyService.updateProperty(property);
+            response.put("likes", property.getLikes());
+        } else {
+            response.put("error", "Property not found");
+        }
+        return response;
+    }
+
+
+
 }
+

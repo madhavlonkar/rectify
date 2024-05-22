@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
 @Entity
 public class Property {
@@ -19,10 +20,32 @@ public class Property {
 	private int numberOfBathrooms;
 	private String nearbyHospitals;
 	private String nearbyColleges;
+	private int likes;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "seller_id")
 	private User seller;
+	
+	@Transient
+    private boolean isLiked;
+	
+	
+
+	public boolean isLiked() {
+		return isLiked;
+	}
+
+	public void setLiked(boolean isLiked) {
+		this.isLiked = isLiked;
+	}
+
+	public int getLikes() {
+		return likes;
+	}
+
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
 
 	public Long getId() {
 		return id;
@@ -88,8 +111,10 @@ public class Property {
 		this.seller = seller;
 	}
 
+	
+
 	public Property(Long id, String place, int area, int numberOfBedrooms, int numberOfBathrooms,
-			String nearbyHospitals, String nearbyColleges, User seller) {
+			String nearbyHospitals, String nearbyColleges, int likes, User seller) {
 		super();
 		this.id = id;
 		this.place = place;
@@ -98,6 +123,7 @@ public class Property {
 		this.numberOfBathrooms = numberOfBathrooms;
 		this.nearbyHospitals = nearbyHospitals;
 		this.nearbyColleges = nearbyColleges;
+		this.likes = likes;
 		this.seller = seller;
 	}
 

@@ -8,7 +8,17 @@
             text-align: center;
             margin-top: 20px;
         }
+        .like-button {
+            cursor: pointer;
+            font-size: 24px;
+            color: grey;
+        }
+        .like-button.liked {
+            color: red;
+        }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <h1>My Properties</h1>
@@ -22,6 +32,7 @@
                 <th>Nearby Hospitals</th>
                 <th>Nearby Colleges</th>
                 <th>Actions</th>
+                <th>Likes</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +46,11 @@
                 <td>
                     <a th:href="@{/properties/edit/{id}(id=${property.id})}">Edit</a> |
                     <a th:href="@{/properties/delete/{id}(id=${property.id})}">Delete</a>
+          
+                </td>
+                <td>
+                <i class="far fa-heart like-button" th:data-id="${property.id}" th:classappend="${property.liked} ? 'liked' : ''"></i>
+                    <span class="like-count" th:text="${property.likes}">0</span>
                 </td>
             </tr>
         </tbody>
@@ -42,5 +58,22 @@
     <div class="add-property-container">
         <a href="/properties/add" class="add-button">Add Property</a>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.like-button').click(function() {
+                var button = $(this);
+                var propertyId = button.attr('data-id');
+                var isLiked = button.hasClass('liked');
+                var url = isLiked ? '/buyer/property/' + propertyId + '/unlike' : '/buyer/property/' + propertyId + '/like';
+                
+                $.post(url, function(response) {
+                    if (response.likes !== undefined) {
+                        button.siblings('.like-count').text(response.likes);
+                        button.toggleClass('liked', !isLiked);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
