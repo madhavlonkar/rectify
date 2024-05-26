@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +34,15 @@ public class BuyerController {
     private EmailService emailService=new EmailService();
 
     @GetMapping("/properties")
-    public String viewAllProperties(Model model) {
-        List<Property> properties = propertyService.getAllProperties();
-        model.addAttribute("properties", properties);
+    public String viewAllProperties(Model model, @RequestParam(defaultValue = "0") int page) {
+        int pageSize = 5; // Number of items per page
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Property> propertyPage = propertyService.getAllProperties(pageable);
+
+        model.addAttribute("properties", propertyPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", propertyPage.getTotalPages());
+        
         return "Buyer/all-properties";
     }
 
@@ -66,7 +75,7 @@ public class BuyerController {
         User buyer = (User) session.getAttribute("user");
 
         if (property == null || buyer == null) {
-            return "redirect:/buyer/properties";
+            return "redirect:/login";
         }
 
         // Send email to buyer with seller's contact details

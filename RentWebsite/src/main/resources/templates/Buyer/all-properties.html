@@ -1,93 +1,164 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>All Properties</title>
-    <link rel="stylesheet" type="text/css" href="/buyer/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        .like-button {
-            cursor: pointer;
-            font-size: 24px;
-            color: grey;
-        }
-        .like-button.liked {
-            color: red;
-        }
-    </style>
+<title>All Properties</title>
+<link rel="stylesheet" type="text/css" href="/buyer/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+.like-button {
+	cursor: pointer;
+	font-size: 24px;
+	color: grey;
+}
+
+.like-button.liked {
+	color: red;
+}
+
+.pagination-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+}
+
+.pagination li {
+    display: inline;
+    margin-right: 5px;
+}
+
+.pagination li a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+
+.pagination li.disabled a {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.pagination li.active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+</style>
 </head>
 <body>
-    <h1>All Properties</h1>
-    <form th:action="@{/buyer/filter}" method="post" id="filterForm">
-        <div>
-            <label for="place">Place:</label>
-            <input type="text" id="place" name="place"/>
-        </div>
-        <div>
-            <label for="minArea">Min Area:</label>
-            <input type="number" id="minArea" name="minArea"/>
-        </div>
-        <div>
-            <label for="maxArea">Max Area:</label>
-            <input type="number" id="maxArea" name="maxArea"/>
-        </div>
-        <div>
-            <label for="minBedrooms">Min Bedrooms:</label>
-            <input type="number" id="minBedrooms" name="minBedrooms"/>
-        </div>
-        <div>
-            <label for="maxBedrooms">Max Bedrooms:</label>
-            <input type="number" id="maxBedrooms" name="maxBedrooms"/>
-        </div>
-        <button type="submit">Apply Filters</button>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Place</th>
-                <th>Area (sq ft)</th>
-                <th>Bedrooms</th>
-                <th>Bathrooms</th>
-                <th>Nearby Hospitals</th>
-                <th>Nearby Colleges</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="property : ${properties}">
-                <td th:text="${property.place}">Place</td>
-                <td th:text="${property.area}">Area</td>
-                <td th:text="${property.numberOfBedrooms}">Bedrooms</td>
-                <td th:text="${property.numberOfBathrooms}">Bathrooms</td>
-                <td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
-                <td th:text="${property.nearbyColleges}">Nearby Colleges</td>
-                <td>
-                    <a th:href="@{/buyer/property/{id}(id=${property.id})}"><button type="button">View Details</button></a>
-                    <form th:action="@{/buyer/property/{id}/interested(id=${property.id})}" method="post" style="display:inline;">
-                        <button type="submit">I'm Interested</button>
-                    </form>
-                    <i class="far fa-heart like-button" th:data-id="${property.id}" th:classappend="${property.liked} ? 'liked' : ''"></i>
-                    <span class="like-count" th:text="${property.likes}">0</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <script>
-        $(document).ready(function() {
-            $('.like-button').click(function() {
-                var button = $(this);
-                var propertyId = button.attr('data-id');
-                var isLiked = button.hasClass('liked');
-                var url = isLiked ? '/buyer/property/' + propertyId + '/unlike' : '/buyer/property/' + propertyId + '/like';
-                
-                $.post(url, function(response) {
-                    if (response.likes !== undefined) {
-                        button.siblings('.like-count').text(response.likes);
-                        button.toggleClass('liked', !isLiked);
-                    }
-                });
+	<h1>All Properties</h1>
+	<form th:action="@{/buyer/filter}" method="post" id="filterForm">
+    <div>
+        <label for="place">Place:</label> <input type="text" id="place" name="place"/>
+    </div>
+    <div>
+        <label for="minArea">Min Area:</label> <input type="number" id="minArea" name="minArea"/>
+    </div>
+    <div>
+        <label for="maxArea">Max Area:</label> <input type="number" id="maxArea" name="maxArea"/>
+    </div>
+    <div>
+        <label for="minBedrooms">Min Bedrooms:</label> <input type="number" id="minBedrooms" name="minBedrooms"/>
+    </div>
+    <div>
+        <label for="maxBedrooms">Max Bedrooms:</label> <input type="number" id="maxBedrooms" name="maxBedrooms"/>
+    </div>
+    <button type="submit">Apply Filters</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>Place</th>
+        <th>Area (sq ft)</th>
+        <th>Bedrooms</th>
+        <th>Bathrooms</th>
+        <th>Nearby Hospitals</th>
+        <th>Nearby Colleges</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="property : ${properties}">
+        <td th:text="${property.place}">Place</td>
+        <td th:text="${property.area}">Area</td>
+        <td th:text="${property.numberOfBedrooms}">Bedrooms</td>
+        <td th:text="${property.numberOfBathrooms}">Bathrooms</td>
+        <td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
+        <td th:text="${property.nearbyColleges}">Nearby Colleges</td>
+        <td><a th:href="@{/buyer/property/{id}(id=${property.id})}"><button
+                        type="button">View Details</button></a>
+            <form
+                    th:action="@{/buyer/property/{id}/interested(id=${property.id})}"
+                    method="post" style="display: inline;">
+                <button type="submit">I'm Interested</button>
+            </form> <i class="far fa-heart like-button" th:data-id="${property.id}"
+                      th:classappend="${property.liked} ? 'liked' : ''"></i> <span
+                    class="like-count" th:text="${property.likes}">0</span></td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${totalPages > 1}" class="pagination-container">
+    <ul class="pagination">
+        <li th:class="${currentPage == 0} ? 'disabled'"><a
+                    th:href="@{'/buyer/properties?page=' + ${currentPage - 1}}">Previous</a>
+        </li>
+        <li th:class="${currentPage == totalPages - 1} ? 'disabled'"><a
+                    th:href="@{'/buyer/properties?page=' + ${currentPage + 1}}">Next</a></li>
+    </ul>
+</div>
+
+<script>
+    $(document).ready(
+            function() {
+                $('.like-button').click(
+                        function() {
+                            var button = $(this);
+                            var propertyId = button.attr('data-id');
+                            var isLiked = button.hasClass('liked');
+                            var url = isLiked ? '/buyer/property/'
+                                    + propertyId + '/unlike'
+                                    : '/buyer/property/' + propertyId
+                                            + '/like';
+
+                            $.post(url, function(response) {
+                                if (response.likes !== undefined) {
+                                    button.siblings('.like-count').text(
+                                            response.likes);
+                                    button.toggleClass('liked', !isLiked);
+                                }
+                            });
+                        });
             });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#filterForm').submit(function(event) {
+            var minArea = $('#minArea').val();
+            var maxArea = $('#maxArea').val();
+            var minBedrooms = $('#minBedrooms').val();
+            var maxBedrooms = $('#maxBedrooms').val();
+
+            if (minArea !== "" && maxArea !== "" && parseInt(minArea) > parseInt(maxArea)) {
+                alert("Minimum area cannot be greater than maximum area");
+                event.preventDefault();
+            }
+
+            if (minBedrooms !== "" && maxBedrooms !== "" && parseInt(minBedrooms) > parseInt(maxBedrooms)) {
+                alert("Minimum bedrooms cannot be greater than maximum bedrooms");
+                event.preventDefault();
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>

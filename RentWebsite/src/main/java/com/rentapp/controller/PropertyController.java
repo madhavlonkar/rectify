@@ -1,6 +1,9 @@
 package com.rentapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.rentapp.model.Property;
 import com.rentapp.model.User;
@@ -19,6 +23,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/properties")
 public class PropertyController {
 
+	 private static final int PAGE_SIZE = 5;
+	
     @Autowired
     private PropertyService propertyService;
 
@@ -44,12 +50,19 @@ public class PropertyController {
     }
 
     @GetMapping("/my")
-    public String showMyProperties(Model model, HttpSession session) {
+    public String showMyProperties(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
         User seller = (User) session.getAttribute("user");
         if (seller == null) {
             return "redirect:/login";
         }
-        model.addAttribute("properties", propertyService.getPropertiesBySeller(seller));
+        
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Page<Property> propertyPage = propertyService.getAllProperties(pageable);
+        
+        model.addAttribute("properties", propertyPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", propertyPage.getTotalPages());
+        
         return "Seller/my-properties";
     }
 

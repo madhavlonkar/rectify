@@ -28,6 +28,8 @@ public class User {
 
 	@OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Property> properties;
+	
+	
 
 	public Long getId() {
 		return id;

@@ -3,6 +3,8 @@ package com.rentapp.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rentapp.dao.PropertyRepository;
@@ -21,6 +23,10 @@ public class PropertyServiceImpl implements PropertyService {
         return propertyRepository.findAll();
     }
     
+    @Override
+    public Page<Property> getAllProperties(Pageable pageable) {
+        return propertyRepository.findAll(pageable);
+    }
     @Override
     public List<Property> filterProperties(String place, int minArea, int maxArea, int minBedrooms, int maxBedrooms) {
         // Implement filtering logic based on criteria

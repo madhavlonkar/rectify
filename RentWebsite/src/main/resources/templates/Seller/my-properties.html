@@ -1,79 +1,137 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Properties</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <style>
-        .add-property-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .like-button {
-            cursor: pointer;
-            font-size: 24px;
-            color: grey;
-        }
-        .like-button.liked {
-            color: red;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<title>My Properties</title>
+<link rel="stylesheet" type="text/css" href="/style.css">
+<style>
+.add-property-container {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.like-button {
+	cursor: pointer;
+	font-size: 24px;
+	color: grey;
+}
+
+.like-button.liked {
+	color: red;
+}
+
+.pagination-container {
+	text-align: center;
+}
+
+.pagination {
+	display: inline-block;
+	padding-left: 0;
+	margin: 20px 0;
+}
+
+.pagination li {
+	display: inline;
+	margin-right: 5px;
+}
+
+.pagination li a {
+	color: black;
+	padding: 8px 12px;
+	text-decoration: none;
+	border: 1px solid #ddd;
+}
+
+.pagination li.disabled a {
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.pagination li.active a {
+	background-color: #007bff;
+	color: white;
+	border-color: #007bff;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <h1>My Properties</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Place</th>
-                <th>Area (sq ft)</th>
-                <th>Bedrooms</th>
-                <th>Bathrooms</th>
-                <th>Nearby Hospitals</th>
-                <th>Nearby Colleges</th>
-                <th>Actions</th>
-                <th>Likes</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="property : ${properties}">
-                <td th:text="${property.place}">Place</td>
-                <td th:text="${property.area}">Area</td>
-                <td th:text="${property.numberOfBedrooms}">Bedrooms</td>
-                <td th:text="${property.numberOfBathrooms}">Bathrooms</td>
-                <td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
-                <td th:text="${property.nearbyColleges}">Nearby Colleges</td>
-                <td>
-                    <a th:href="@{/properties/edit/{id}(id=${property.id})}">Edit</a> |
-                    <a th:href="@{/properties/delete/{id}(id=${property.id})}">Delete</a>
-          
-                </td>
-                <td>
-                <i class="far fa-heart like-button" th:data-id="${property.id}" th:classappend="${property.liked} ? 'liked' : ''"></i>
-                    <span class="like-count" th:text="${property.likes}">0</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="add-property-container">
-        <a href="/properties/add" class="add-button">Add Property</a>
-    </div>
-    <script>
-        $(document).ready(function() {
-            $('.like-button').click(function() {
-                var button = $(this);
-                var propertyId = button.attr('data-id');
-                var isLiked = button.hasClass('liked');
-                var url = isLiked ? '/buyer/property/' + propertyId + '/unlike' : '/buyer/property/' + propertyId + '/like';
-                
-                $.post(url, function(response) {
-                    if (response.likes !== undefined) {
-                        button.siblings('.like-count').text(response.likes);
-                        button.toggleClass('liked', !isLiked);
-                    }
-                });
-            });
-        });
-    </script>
+	<h1>My Properties</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Place</th>
+				<th>Area (sq ft)</th>
+				<th>Bedrooms</th>
+				<th>Bathrooms</th>
+				<th>Nearby Hospitals</th>
+				<th>Nearby Colleges</th>
+				<th>Actions</th>
+				<th>Likes</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="property : ${properties}">
+				<td th:text="${property.place}">Place</td>
+				<td th:text="${property.area}">Area</td>
+				<td th:text="${property.numberOfBedrooms}">Bedrooms</td>
+				<td th:text="${property.numberOfBathrooms}">Bathrooms</td>
+				<td th:text="${property.nearbyHospitals}">Nearby Hospitals</td>
+				<td th:text="${property.nearbyColleges}">Nearby Colleges</td>
+				<td><a th:href="@{/properties/edit/{id}(id=${property.id})}">Edit</a>
+					| <a th:href="@{/properties/delete/{id}(id=${property.id})}">Delete</a>
+
+				</td>
+				<td><i class="far fa-heart like-button"
+					th:data-id="${property.id}"
+					th:classappend="${property.liked} ? 'liked' : ''"></i> <span
+					class="like-count" th:text="${property.likes}">0</span></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<!-- Add pagination controls -->
+	<!-- Add pagination controls -->
+	<!-- Add pagination controls -->
+	<div th:if="${totalPages > 1}" class="pagination-container">
+		<ul class="pagination">
+			<li th:class="${currentPage == 0} ? 'disabled'"><a
+				th:href="@{'/properties/my?page=' + ${currentPage - 1}}">Previous</a>
+			</li>
+			<li th:class="${currentPage == totalPages - 1} ? 'disabled'"><a
+				th:href="@{'/properties/my?page=' + ${currentPage + 1}}">Next</a></li>
+		</ul>
+	</div>
+
+
+
+
+	<div class="add-property-container">
+		<a href="/properties/add" class="add-button">Add Property</a>
+	</div>
+	<script>
+		$(document).ready(
+				function() {
+					$('.like-button').click(
+							function() {
+								var button = $(this);
+								var propertyId = button.attr('data-id');
+								var isLiked = button.hasClass('liked');
+								var url = isLiked ? '/buyer/property/'
+										+ propertyId + '/unlike'
+										: '/buyer/property/' + propertyId
+												+ '/like';
+
+								$.post(url, function(response) {
+									if (response.likes !== undefined) {
+										button.siblings('.like-count').text(
+												response.likes);
+										button.toggleClass('liked', !isLiked);
+									}
+								});
+							});
+				});
+	</script>
 </body>
 </html>

@@ -3,10 +3,50 @@
 <head>
     <title>Add Property</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
+    <script>
+        function validateForm() {
+            var place = document.getElementById("place").value;
+            var area = document.getElementById("area").value;
+            var numberOfBedrooms = document.getElementById("numberOfBedrooms").value;
+            var numberOfBathrooms = document.getElementById("numberOfBathrooms").value;
+            var nearbyHospitals = document.getElementById("nearbyHospitals").value;
+            var nearbyColleges = document.getElementById("nearbyColleges").value;
+
+            if (place == "") {
+                alert("Place must be filled out");
+                return false;
+            }
+            if (area == "" || area > 1000) {
+                alert("Area must be filled out and cannot be greater than 1000 sq ft");
+                return false;
+            }
+            if (numberOfBedrooms == "" || numberOfBedrooms > 10) {
+                alert("Number of Bedrooms must be filled out and cannot be more than 10");
+                return false;
+            }
+            if (numberOfBathrooms == "") {
+                alert("Number of Bathrooms must be filled out");
+                return false;
+            }
+            if (nearbyHospitals == "") {
+                alert("Nearby Hospitals must be filled out");
+                return false;
+            }
+            if (nearbyColleges == "") {
+                alert("Nearby Colleges must be filled out");
+                return false;
+            }
+            return true;
+        }
+        
+        function goBack() {
+    		window.location.href = '/properties/my';
+    	}
+    </script>
 </head>
 <body>
     <h1>Add Property</h1>
-    <form action="#" th:action="@{/properties/add}" th:object="${property}" method="post">
+    <form action="#" th:action="@{/properties/add}" th:object="${property}" method="post" onsubmit="return validateForm()">
         <div>
             <label for="place">Place:</label>
             <input type="text" id="place" th:field="*{place}" required/>
@@ -32,6 +72,7 @@
             <input type="text" id="nearbyColleges" th:field="*{nearbyColleges}" required/>
         </div>
         <button type="submit">Add Property</button>
+        <button type="button" onclick="goBack()">Back</button>
     </form>
 </body>
 </html>
